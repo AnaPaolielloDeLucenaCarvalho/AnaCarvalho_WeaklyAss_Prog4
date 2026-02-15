@@ -16,7 +16,7 @@ namespace dae
 		std::vector<std::unique_ptr<Component>> m_Components;
 	public:
 		GameObject() = default;
-		virtual ~GameObject();
+		~GameObject();
 
 		GameObject(const GameObject& other) = delete;
 		GameObject(GameObject&& other) = delete;
@@ -24,7 +24,7 @@ namespace dae
 		GameObject& operator=(GameObject&& other) = delete;
 
         void Update(float deltaTime);
-		virtual void Render() const;
+		void Render() const;
 
 		void SetPosition(float x, float y);
 
