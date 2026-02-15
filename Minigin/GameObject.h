@@ -1,27 +1,73 @@
-#pragma once
+#ifndef GAMEOBJECT_H // No #pragma once, use include guards (for tom's sake)
+#define GAMEOBJECT_H
+
 #include <string>
 #include <memory>
+#include <vector>
 #include "Transform.h"
+#include "Component.h"
 
 namespace dae
 {
-	class Texture2D;
-	class GameObject 
+	class GameObject final
 	{
 		Transform m_transform{};
-		std::shared_ptr<Texture2D> m_texture{};
+
+		std::vector<std::unique_ptr<Component>> m_Components;
 	public:
-		virtual void Update();
-		virtual void Render() const;
-
-		void SetTexture(const std::string& filename);
-		void SetPosition(float x, float y);
-
 		GameObject() = default;
 		virtual ~GameObject();
+
 		GameObject(const GameObject& other) = delete;
 		GameObject(GameObject&& other) = delete;
 		GameObject& operator=(const GameObject& other) = delete;
 		GameObject& operator=(GameObject&& other) = delete;
+
+        void Update(float deltaTime);
+		virtual void Render() const;
+
+		void SetPosition(float x, float y);
+
+		Transform& GetTransform() { return m_transform; }
+
+        // --- COMPONENT SYSTEM ---
+
+        // Add a component to a game object
+        template <typename T, typename... Args>
+        T* AddComponent(Args&&... args)
+        {
+            static_assert(std::is_base_of<Component, T>::value, "T must derive from Component");
+            auto component = std::make_unique<T>(this, std::forward<Args>(args)...);
+            T* rawPtr = component.get();
+            m_Components.push_back(std::move(component));
+            return rawPtr;
+        }
+
+        // Get a component from a game object
+        template <typename T>
+        T* GetComponent() const
+        {
+            for (const auto& component : m_Components)
+            {
+                if (T* castedComponent = dynamic_cast<T*>(component.get()))
+                {
+                    return castedComponent;
+                }
+            }
+            return nullptr;
+        }
+
+        // Check whether a component has been added
+        template <typename T>
+        bool HasComponent() const { return GetComponent<T>() != nullptr; }
+
+        // Remove a component from a game object in a safe manner
+        template <typename T>
+        void RemoveComponent()
+        {
+            std::erase_if(m_Components, [](const std::unique_ptr<Component>& component) { return dynamic_cast<T*>(component.get()) != nullptr; });
+        }
 	};
 }
+
+#endif // GAMEOBJECT_H
