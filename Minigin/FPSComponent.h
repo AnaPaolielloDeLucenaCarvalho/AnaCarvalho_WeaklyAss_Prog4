@@ -9,7 +9,7 @@ namespace dae
     {
     public:
         FPSComponent(GameObject* pOwner);
-        virtual ~FPSComponent() = default;
+        ~FPSComponent() = default;
 
         void Update(float deltaTime) override;
 

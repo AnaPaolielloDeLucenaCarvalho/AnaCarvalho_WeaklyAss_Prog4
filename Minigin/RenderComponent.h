@@ -12,13 +12,14 @@ namespace dae
     class RenderComponent final : public Component
     {
     public:
-        RenderComponent(GameObject* pOwner);
-        virtual ~RenderComponent() = default;
+        RenderComponent(GameObject* pOwner, const std::string& filename);
+        ~RenderComponent() = default;
 
         void Update(float deltaTime) override;
         void Render() const override;
 
         void SetTexture(const std::string& filename);
+        void SetTexture(std::shared_ptr<Texture2D> texture) { m_texture = std::move(texture); };
 
     private:
         std::shared_ptr<Texture2D> m_texture;

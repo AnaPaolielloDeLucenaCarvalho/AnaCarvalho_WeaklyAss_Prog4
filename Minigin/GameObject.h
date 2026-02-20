@@ -14,6 +14,7 @@ namespace dae
 		Transform m_transform{};
 
 		std::vector<std::unique_ptr<Component>> m_Components;
+		bool m_isMarkedForDestroy{ false };
 	public:
 		GameObject() = default;
 		~GameObject();
@@ -29,6 +30,8 @@ namespace dae
 		void SetPosition(float x, float y);
 
 		Transform& GetTransform() { return m_transform; }
+        void MarkForDestroy() { m_isMarkedForDestroy = true; }
+        bool IsMarkedForDestroy() const { return m_isMarkedForDestroy; }
 
         // --- COMPONENT SYSTEM ---
 
@@ -65,7 +68,13 @@ namespace dae
         template <typename T>
         void RemoveComponent()
         {
-            std::erase_if(m_Components, [](const std::unique_ptr<Component>& component) { return dynamic_cast<T*>(component.get()) != nullptr; });
+            for (const auto& component : m_Components)
+            {
+                if (dynamic_cast<T*>(component.get()) != nullptr)
+                {
+                    component->MarkForDestroy();
+                }
+            }
         }
 	};
 }

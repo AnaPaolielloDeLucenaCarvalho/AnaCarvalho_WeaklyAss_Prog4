@@ -9,6 +9,8 @@ void dae::GameObject::Update(float deltaTime)
 	{
 		component->Update(deltaTime);
 	}
+
+	std::erase_if(m_Components, [](const std::unique_ptr<Component>& component){ return component->IsMarkedForDestroy(); });
 }
 
 void dae::GameObject::Render() const

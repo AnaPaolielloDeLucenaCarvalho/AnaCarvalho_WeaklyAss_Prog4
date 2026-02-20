@@ -20,11 +20,16 @@ namespace dae
 
         GameObject* GetOwner() const { return m_pOwner; } // Component has access to owner
 
+		// We don't want to delete it immediately, so we mark it for destruction
+        void MarkForDestroy() { m_isMarkedForDestroy = true; }
+        bool IsMarkedForDestroy() const { return m_isMarkedForDestroy; }
+
         // Think about this: should it ever be possible for a component to exist without a gameobject? no
         Component(GameObject* pOwner) : m_pOwner(pOwner) {}
 
     private:
         GameObject* m_pOwner;
+        bool m_isMarkedForDestroy{ false };
     };
 }
 

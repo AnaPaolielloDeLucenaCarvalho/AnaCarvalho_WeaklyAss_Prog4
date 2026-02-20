@@ -5,17 +5,18 @@
 
 namespace dae
 {
-    RenderComponent::RenderComponent(GameObject* pOwner) : Component(pOwner) {}
+    RenderComponent::RenderComponent(GameObject* pOwner, const std::string& filename)
+        : Component(pOwner)
+    {
+        SetTexture(filename);
+    }
 
     void RenderComponent::Update(float /*deltaTime*/) {}
 
     void RenderComponent::Render() const
     {
-        if (m_texture != nullptr)
-        {
-            const auto& pos = GetOwner()->GetTransform().GetPosition();
-            Renderer::GetInstance().RenderTexture(*m_texture, pos.x, pos.y);
-        }
+        const auto& pos = GetOwner()->GetTransform().GetPosition();
+        Renderer::GetInstance().RenderTexture(*m_texture, pos.x, pos.y);
     }
 
     void RenderComponent::SetTexture(const std::string& filename)
