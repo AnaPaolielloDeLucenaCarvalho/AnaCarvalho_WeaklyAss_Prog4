@@ -11,10 +11,18 @@ namespace dae
 {
 	class GameObject final
 	{
-		Transform m_transform{};
+        Transform m_worldTransform{};
+        Transform m_localTransform{};
 
 		std::vector<std::unique_ptr<Component>> m_Components;
 		bool m_isMarkedForDestroy{ false };
+
+        // W02
+        GameObject* m_pParent{ nullptr };
+        std::vector<GameObject*> m_pChildren{};
+        bool m_positionIsDirty{ false };
+
+        void UpdateWorldTransform();
 	public:
 		GameObject() = default;
 		~GameObject();
@@ -27,9 +35,19 @@ namespace dae
         void Update(float deltaTime);
 		void Render() const;
 
-		void SetPosition(float x, float y);
+        void SetLocalPosition(float x, float y);
+        const Transform& GetTransform();
+        void SetPositionDirty();
 
-		Transform& GetTransform() { return m_transform; }
+        void SetParent(GameObject* parent, bool keepWorldPosition);
+        GameObject* GetParent() const { return m_pParent; }
+        size_t GetChildCount() const { return m_pChildren.size(); }
+        GameObject* GetChildAt(size_t index) const { return m_pChildren[index]; }
+
+        void RemoveChild(GameObject* child);
+        void AddChild(GameObject* child);
+        bool IsChild(GameObject* child) const;
+
         void MarkForDestroy() { m_isMarkedForDestroy = true; }
         bool IsMarkedForDestroy() const { return m_isMarkedForDestroy; }
 
