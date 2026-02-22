@@ -9,9 +9,10 @@ namespace dae
 {
     class Texture2D;
 
-    class RenderComponent final : public Component
+    class RenderComponent : public Component
     {
     public:
+        RenderComponent(GameObject* pOwner);
         RenderComponent(GameObject* pOwner, const std::string& filename);
         ~RenderComponent() = default;
 

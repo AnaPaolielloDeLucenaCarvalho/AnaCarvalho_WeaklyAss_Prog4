@@ -9,11 +9,10 @@
 namespace dae
 {
     TextComponent::TextComponent(GameObject* pOwner, const std::string& text, std::shared_ptr<Font> font, const SDL_Color& color)
-        : Component(pOwner)
+        : RenderComponent(pOwner)
         , m_needsUpdate(true)
         , m_text(text)
         , m_font(std::move(font))
-        , m_textTexture(nullptr)
         , m_color(color) // Save it here!
     {
     }
@@ -35,18 +34,9 @@ namespace dae
             }
 
             SDL_DestroySurface(surf);
-            m_textTexture = std::make_shared<Texture2D>(texture);
+            SetTexture(std::make_shared<Texture2D>(texture));
 
             m_needsUpdate = false;
-        }
-    }
-
-    void TextComponent::Render() const
-    {
-        if (m_textTexture != nullptr)
-        {
-            const auto& pos = GetOwner()->GetTransform().GetPosition();
-            Renderer::GetInstance().RenderTexture(*m_textTexture, pos.x, pos.y);
         }
     }
 

@@ -5,6 +5,11 @@
 
 namespace dae
 {
+    RenderComponent::RenderComponent(GameObject* pOwner)
+        : Component(pOwner), m_texture(nullptr)
+    {
+    }
+
     RenderComponent::RenderComponent(GameObject* pOwner, const std::string& filename)
         : Component(pOwner)
     {
