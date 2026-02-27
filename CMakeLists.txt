@@ -29,7 +29,8 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Minigin/FPSComponent.cpp 
   Minigin/TextComponent.cpp 
   Minigin/RenderComponent.cpp 
-  Minigin/RotatorComponent.cpp)
+  Minigin/RotatorComponent.cpp 
+  Minigin/TrashCacheComponent.cpp)
 
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
@@ -106,6 +107,9 @@ if(NOT SDL3_ttf_FOUND)
   endif()
 endif()
 
+# Define ImGui Math Operators globally so imgui-plot can see it
+add_compile_definitions(IMGUI_DEFINE_MATH_OPERATORS)
+
 # Dear ImGui
 FetchContent_Declare(
   imgui
@@ -122,8 +126,7 @@ add_library(imgui STATIC
   ${imgui_SOURCE_DIR}/imgui_widgets.cpp
   ${imgui_SOURCE_DIR}/imgui_demo.cpp
   ${imgui_SOURCE_DIR}/backends/imgui_impl_sdl3.cpp
-  ${imgui_SOURCE_DIR}/backends/imgui_impl_sdlrenderer3.cpp
-)
+  ${imgui_SOURCE_DIR}/backends/imgui_impl_sdlrenderer3.cpp)
 
 target_include_directories(imgui PUBLIC ${imgui_SOURCE_DIR} ${sdl3_SOURCE_DIR}/include)
 target_link_libraries(imgui PUBLIC SDL3::SDL3)

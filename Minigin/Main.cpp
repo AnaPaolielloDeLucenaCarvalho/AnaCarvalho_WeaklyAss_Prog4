@@ -16,6 +16,7 @@
 #include "ResourceManager.h"
 #include "RenderComponent.h"
 #include "RotatorComponent.h"
+#include "TrashCacheComponent.h"
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -68,6 +69,10 @@ static void load()
 	//char2Obj->AddComponent<dae::RotatorComponent>(150.0f, -3.0f);
 	//char2Obj->SetParent(char1Ptr, false);
 	//scene.Add(std::move(char2Obj));
+
+	auto go2 = std::make_unique<dae::GameObject>();
+	go2->AddComponent<dae::TrashCacheComponent>();
+	scene.Add(std::move(go2));
 }
 
 int main(int, char*[]) {
