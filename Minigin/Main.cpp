@@ -47,26 +47,27 @@ static void load()
 	fpsObject->SetLocalPosition(10, 10);
 	scene.Add(std::move(fpsObject));
 
-	// Root Object (Center of screen, stationary)
-	auto pivotObj = std::make_unique<dae::GameObject>();
-	pivotObj->SetLocalPosition(358, 180);
-	auto pivotPtr = pivotObj.get();
-	scene.Add(std::move(pivotObj));
+	// --- W02 ROTATION TEST ---
+	//// Root Object (Center of screen, stationary)
+	//auto pivotObj = std::make_unique<dae::GameObject>();
+	//pivotObj->SetLocalPosition(358, 180);
+	//auto pivotPtr = pivotObj.get();
+	//scene.Add(std::move(pivotObj));
 
-	// 1 Child (Rotates around Root)
-	auto char1Obj = std::make_unique<dae::GameObject>();
-	char1Obj->AddComponent<dae::RenderComponent>("cat.png");
-	char1Obj->AddComponent<dae::RotatorComponent>(50.0f, 2.f); // Radius 50, Speed 2
-	char1Obj->SetParent(pivotPtr, false);
-	auto char1Ptr = char1Obj.get();
-	scene.Add(std::move(char1Obj));
+	//// 1 Child (Rotates around Root)
+	//auto char1Obj = std::make_unique<dae::GameObject>();
+	//char1Obj->AddComponent<dae::RenderComponent>("cat.png");
+	//char1Obj->AddComponent<dae::RotatorComponent>(50.0f, 2.f); // Radius 50, Speed 2
+	//char1Obj->SetParent(pivotPtr, false);
+	//auto char1Ptr = char1Obj.get();
+	//scene.Add(std::move(char1Obj));
 
-	// 2 Child (Rotates around 1 Child)
-	auto char2Obj = std::make_unique<dae::GameObject>();
-	char2Obj->AddComponent<dae::RenderComponent>("cat.png");
-	char2Obj->AddComponent<dae::RotatorComponent>(150.0f, -3.0f);
-	char2Obj->SetParent(char1Ptr, false);
-	scene.Add(std::move(char2Obj));
+	//// 2 Child (Rotates around 1 Child)
+	//auto char2Obj = std::make_unique<dae::GameObject>();
+	//char2Obj->AddComponent<dae::RenderComponent>("cat.png");
+	//char2Obj->AddComponent<dae::RotatorComponent>(150.0f, -3.0f);
+	//char2Obj->SetParent(char1Ptr, false);
+	//scene.Add(std::move(char2Obj));
 }
 
 int main(int, char*[]) {
