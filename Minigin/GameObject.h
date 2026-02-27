@@ -42,7 +42,7 @@ namespace dae
         void SetParent(GameObject* parent, bool keepWorldPosition);
         GameObject* GetParent() const { return m_pParent; }
         size_t GetChildCount() const { return m_pChildren.size(); }
-        GameObject* GetChildAt(size_t index) const { return m_pChildren[index]; }
+        GameObject* GetChildAt(unsigned int index) const { return m_pChildren[index]; }
 
         void RemoveChild(GameObject* child);
         void AddChild(GameObject* child);

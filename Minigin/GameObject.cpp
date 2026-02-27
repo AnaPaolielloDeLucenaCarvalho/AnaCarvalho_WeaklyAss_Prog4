@@ -40,7 +40,8 @@ const dae::Transform& dae::GameObject::GetTransform()
 void dae::GameObject::SetPositionDirty()
 {
 	m_positionIsDirty = true;
-	// If position changes, all children's positions change
+
+	// If position changes, all children change
 	for (auto child : m_pChildren)
 	{
 		child->SetPositionDirty();
@@ -68,11 +69,13 @@ void dae::GameObject::UpdateWorldTransform()
 
 void dae::GameObject::SetParent(GameObject* parent, bool keepWorldPosition)
 {
+	// Validate
 	if (IsChild(parent) || parent == this || m_pParent == parent)
 	{
 		return;
 	}
 
+	// Update Position
 	if (parent == nullptr)
 	{
 		SetLocalPosition(GetTransform().GetPosition().x, GetTransform().GetPosition().y);
@@ -81,17 +84,21 @@ void dae::GameObject::SetParent(GameObject* parent, bool keepWorldPosition)
 	{
 		if (keepWorldPosition)
 		{
-			SetLocalPosition(GetTransform().GetPosition().x - parent->GetTransform().GetPosition().x,
-				GetTransform().GetPosition().y - parent->GetTransform().GetPosition().y);
+			SetLocalPosition(GetTransform().GetPosition().x - parent->GetTransform().GetPosition().x, GetTransform().GetPosition().y - parent->GetTransform().GetPosition().y);
 		}
 		SetPositionDirty();
 	}
 
+	// Remove itself from previous parent
 	if (m_pParent)
 	{
 		m_pParent->RemoveChild(this);
 	}
+
+	// Set the new parent pointer
 	m_pParent = parent;
+
+	// Add itself to the new parent's list
 	if (m_pParent)
 	{
 		m_pParent->AddChild(this);
@@ -100,15 +107,30 @@ void dae::GameObject::SetParent(GameObject* parent, bool keepWorldPosition)
 
 void dae::GameObject::AddChild(GameObject* child)
 {
-	if (std::ranges::find(m_pChildren, child) == m_pChildren.end())
+	if (child == nullptr || child == this)
 	{
-		m_pChildren.push_back(child);
+		return;
 	}
+
+	child->m_pParent = this;
+	m_pChildren.push_back(child);
+
+	child->SetPositionDirty();
 }
 
 void dae::GameObject::RemoveChild(GameObject* child)
 {
-	std::erase(m_pChildren, child);
+	if (child == nullptr || child->m_pParent != this)
+	{
+		return;
+	}
+
+	child->SetLocalPosition(child->GetTransform().GetPosition().x, child->GetTransform().GetPosition().y);
+	child->SetPositionDirty();
+
+	m_pChildren.erase(std::remove(m_pChildren.begin(), m_pChildren.end(), child), m_pChildren.end());
+
+	child->m_pParent = nullptr;
 }
 
 bool dae::GameObject::IsChild(GameObject* child) const

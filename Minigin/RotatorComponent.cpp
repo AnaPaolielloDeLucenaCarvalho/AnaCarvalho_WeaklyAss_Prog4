@@ -9,10 +9,13 @@ dae::RotatorComponent::RotatorComponent(GameObject* pOwner, float radius, float 
 
 void dae::RotatorComponent::Update(float deltaTime)
 {
-	m_angle += m_speed * deltaTime;
+    m_angle += m_speed * deltaTime;
 
-	float x = std::cos(m_angle) * m_radius;
-	float y = std::sin(m_angle) * m_radius;
+    // Prevent overflow
+    if (m_angle > 2.0f * 3.14159f) m_angle -= 2.0f * 3.14159f;
 
-	GetOwner()->SetLocalPosition(x, y);
+    float x = m_radius * std::cos(m_angle);
+    float y = m_radius * std::sin(m_angle);
+
+    GetOwner()->SetLocalPosition(x, y);
 }
